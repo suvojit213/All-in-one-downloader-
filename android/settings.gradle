@@ -1,3 +1,20 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
+// This is the new magic. We are defining flutterRoot ourselves.
+def localProperties = new Properties()
+def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty("flutter.sdk")
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+// The rest of the configuration
 pluginManagement {
     repositories {
         google()
@@ -7,10 +24,12 @@ pluginManagement {
 }
 
 plugins {
-    // We will let flutter.gradle apply the plugin
+    id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
+    id "com.android.application" version "7.3.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
 }
 
-include ':app'
+include ":app"
 
-// This is the magic line for Flutter
-apply from: new File(new File(flutterRoot).parentFile, 'packages/flutter_tools/gradle/plugins.gradle')
+// And now we apply the plugin using the flutterRoot we defined.
+apply from: new File(flutterRoot, "packages/flutter_tools/gradle/app_plugin_loader.gradle")
