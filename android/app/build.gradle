@@ -1,20 +1,17 @@
+// Apply the necessary plugins for an Android application and Flutter.
 plugins {
     id "com.android.application"
-    id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Read local properties to get Flutter version info.
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -28,55 +25,56 @@ if (flutterVersionName == null) {
 }
 
 android {
-    compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
+    // Set the namespace for the application. This is required for Android Gradle Plugin 7.3+.
+    namespace "com.example.all_in_one_downloader"
+    
+    // Set the SDK versions.
+    compileSdkVersion 33
+    ndkVersion "25.1.8937393"
 
+    // Configure Java and Kotlin options.
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
+    // Specify the source sets for Kotlin.
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
+        // Specify your own unique Application ID.
         applicationId "com.example.all_in_one_downloader"
+        
+        // Set the minimum and target SDK versions.
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 33
+        
+        // Set the version code and name from Flutter.
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
     }
 
     buildTypes {
         release {
+            // Configure signing for the release build.
+            // For now, it uses the debug signing configuration.
+            // TODO: Add your own signing config for the release build.
             signingConfig signingConfigs.debug
-            minifyEnabled false
-            shrinkResources false
         }
-    }
-
-    packagingOptions {
-        pickFirst '**/libc++_shared.so'
-        pickFirst '**/libjsc.so'
     }
 }
 
 flutter {
+    // Specify the location of the Flutter project.
     source '../..'
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.work:work-runtime-ktx:2.8.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation 'androidx.multidex:multidex:2.0.1'
+    // Flutter manages dependencies via pubspec.yaml.
+    // You can add native Android dependencies here if needed.
 }
-
