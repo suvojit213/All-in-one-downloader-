@@ -1,7 +1,4 @@
-// This file configures the plugin management for the Gradle build.
-
 pluginManagement {
-    // Define the repositories where Gradle should look for plugins.
     repositories {
         google()
         mavenCentral()
@@ -9,13 +6,11 @@ pluginManagement {
     }
 }
 
-// Define the plugins used in the project and their versions.
-// `apply false` means the plugin is made available but not applied to this settings script itself.
 plugins {
-    id 'com.android.application' version '7.3.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
-    id 'dev.flutter.flutter-gradle-plugin' version '1.0.0' apply false
+    // We will let flutter.gradle apply the plugin
 }
 
-// Include the main app module in the build.
 include ':app'
+
+// This is the magic line for Flutter
+apply from: new File(new File(flutterRoot).parentFile, 'packages/flutter_tools/gradle/plugins.gradle')
