@@ -1,11 +1,12 @@
 // Apply the necessary plugins for an Android application and Flutter.
+// THIS IS THE NEW, DECLARATIVE WAY that your Flutter version requires.
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-// Read local properties to get Flutter version info.
+// Reads the local properties file.
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -14,6 +15,7 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+// Gets the Flutter version code and name.
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -25,56 +27,50 @@ if (flutterVersionName == null) {
 }
 
 android {
-    // Set the namespace for the application. This is required for Android Gradle Plugin 7.3+.
+    // The namespace is required for Android Gradle Plugin 7.3+.
     namespace "com.example.all_in_one_downloader"
     
-    // Set the SDK versions.
-    compileSdkVersion 33
+    // Updated SDK versions for better compatibility with modern Android.
+    compileSdkVersion 34
     ndkVersion "25.1.8937393"
 
-    // Configure Java and Kotlin options.
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
-    // Specify the source sets for Kotlin.
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
-        // Specify your own unique Application ID.
+        // Defines the application ID and version info.
         applicationId "com.example.all_in_one_downloader"
-        
-        // Set the minimum and target SDK versions.
         minSdkVersion 21
-        targetSdkVersion 33
-        
-        // Set the version code and name from Flutter.
+        targetSdkVersion 34 // Updated target SDK
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
     buildTypes {
         release {
-            // Configure signing for the release build.
-            // For now, it uses the debug signing configuration.
             // TODO: Add your own signing config for the release build.
+            // Using the debug signing config for now.
             signingConfig signingConfigs.debug
         }
     }
 }
 
 flutter {
-    // Specify the location of the Flutter project.
+    // Tells the Gradle plugin where to find the Flutter project.
     source '../..'
 }
 
 dependencies {
-    // Flutter manages dependencies via pubspec.yaml.
+    // Flutter manages its own dependencies via pubspec.yaml.
     // You can add native Android dependencies here if needed.
 }
